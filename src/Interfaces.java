@@ -1,7 +1,10 @@
-import java.io.*;
-import java.net.*;
-import java.util.*;
 import static java.lang.System.out;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Collections;
+import java.util.Enumeration;
 
 public class Interfaces
 {

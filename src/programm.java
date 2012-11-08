@@ -1,15 +1,20 @@
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.jnetpcap.JBufferHandler;
 import org.jnetpcap.Pcap;
-import org.jnetpcap.PcapBpfProgram;
-import org.jnetpcap.PcapDumper;
 import org.jnetpcap.PcapHeader;
 import org.jnetpcap.PcapIf;
 import org.jnetpcap.nio.JBuffer;
@@ -20,11 +25,54 @@ import org.jnetpcap.protocol.JProtocol;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Http;
 import org.jnetpcap.protocol.tcpip.Tcp;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class programm
 {
 	public static void main(String[] args)
 	{
+		Display display = new Display();
+		Shell shell = new Shell(display);
+		shell.setSize(800, 400);
+		shell.setText("java-cookie-sniffer");
+		
+		Tree tree = new Tree(shell, SWT.BORDER);
+		tree.setLinesVisible(true);
+		tree.setHeaderVisible(true);
+		tree.setBounds(137, 10, 637, 342);
+		
+		TreeColumn trclmnHost = new TreeColumn(tree, SWT.NONE);
+		trclmnHost.setWidth(100);
+		trclmnHost.setText("Host");
+		
+		TreeColumn trclmnType = new TreeColumn(tree, SWT.NONE);
+		trclmnType.setWidth(100);
+		trclmnType.setText("Type");
+		
+		TreeColumn trclmnContent = new TreeColumn(tree, SWT.NONE);
+		trclmnContent.setWidth(433);
+		trclmnContent.setText("Content");
+		
+		Button btnAll = new Button(shell, SWT.RADIO);
+		btnAll.setBounds(10, 10, 90, 16);
+		btnAll.setText("All");
+		
+		Combo combo = new Combo(shell, SWT.NONE);
+		combo.setEnabled(false);
+		combo.setBounds(33, 30, 98, 23);
+		
+		Button btnSelectHost = new Button(shell, SWT.RADIO);
+		btnSelectHost.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+			}
+		});
+		btnSelectHost.setBounds(10, 32, 90, 16);
+		shell.open();
+		
 		List<PcapIf> devices = new ArrayList<PcapIf>(); //network interfaces
 		StringBuilder errBuffer = new StringBuilder(); //errorbuffer
 		
@@ -130,11 +178,11 @@ public class programm
 					{  
 						try
 						{
-							String temp = buffer.toHexdump(); //dump buffer content to temp string
-							temp = temp.replaceAll("[\\dabcdef]{4}:[\\dabcdef ]{0,55}", ""); //replace hex code from string
-						        
+							String bufferText = buffer.toHexdump(); //dump buffer content to temp string
+							String clearText = bufferText.replaceAll("[\\dabcdef]{4}:[\\dabcdef ]{0,55}", ""); //replace hex code from string
+						    List<String>[] filtered = filterHost("", clearText);
 						    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(System.getProperty("user.home") + "\\Desktop\\sniffer.log", true))); //declare stringwriter
-						    out.println(temp); //logging retreivement
+						    out.println(bufferText); //logging retreivement
 						    out.close(); //release writer
 						}
 						catch (IOException e) //catching IOException
@@ -172,5 +220,26 @@ public class programm
 	    		//jpacketHandler //packet handler
 	    		, ""); //userdefiened information
 	    pcap.close(); //release active interface
+	}
+	
+	public static List<String>[] filterHost(String host, String input)
+	{
+		List<String>[] result = null;
+		if (host == "All")
+		{
+			result = filterContent(input);
+		}
+		else
+		{
+		}
+	
+		return result;
+	}
+	
+	private static List<String>[] filterContent(String input)
+	{
+		List<String>[] result = null;
+		
+		return result;
 	}
 }
