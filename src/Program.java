@@ -35,10 +35,10 @@ public class Program
 		items = new TreeItem[] {};
 		packets = new PcapPacket[] {};
 		// Determinate OS and architecture and load specific library
-		Map<String, String> env = System.getenv(); // Load environment strings
+		// Map<String, String> env = System.getenv(); // Load environment strings
 		String arch = System.getProperty("os.arch"); // Check Architecture
 		String os = System.getProperty("os.name");  // Check OS
-		String libPath = System.getProperty("java.library.path"); // save old libraryPath
+		// String libPath = System.getProperty("java.library.path"); // save old libraryPath
 
 		/* >>> General Information <<<
 		 * Reinitialize java.lib.path
@@ -55,12 +55,7 @@ public class Program
 		if (os.toLowerCase().contains("windows")) {
 			if (arch.contains("64")) {
 				try {
-					System.setProperty( "java.library.path", env.get("win64") + libPath );
-					 
-					Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
-					fieldSysPath.setAccessible( true );
-					fieldSysPath.set( null, null );
-					System.load(env.get("win64"));
+					System.load(System.getProperty("user.dir") + "/lib/windows/x64/jnetpcap.dll");
 				}
 				catch (UnsatisfiedLinkError e) {
 					System.out.print(e.getMessage());
@@ -68,12 +63,7 @@ public class Program
 			}
 			else {
 				try {
-				System.setProperty( "java.library.path", env.get("win86") + libPath );
-				 
-				Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
-				fieldSysPath.setAccessible( true );
-				fieldSysPath.set( null, null );
-				System.load(env.get("win86"));
+					System.load(System.getProperty("user.dir") + "/lib/windows/x86/jnetpcap.dll");
 				}
 				catch (UnsatisfiedLinkError e) {
 					System.out.print(e.getMessage());
@@ -85,24 +75,14 @@ public class Program
 		else {
 			if (arch.contains("64"))
 				try {
-				System.setProperty( "java.library.path", env.get("linux64") + libPath );
-			 
-				Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
-				fieldSysPath.setAccessible( true );
-				fieldSysPath.set( null, null );
-				System.load(env.get("linux64"));
+					System.load(System.getProperty("user.dir") + "/lib/linux/x64/libjnetpcap.so");
 				}
 				catch (UnsatisfiedLinkError e) {
 					System.out.print(e.getMessage());
 				}
 			else {
 				try {
-				System.setProperty( "java.library.path", env.get("linux86") + libPath );
-			 
-				Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
-				fieldSysPath.setAccessible( true );
-				fieldSysPath.set( null, null );
-				System.load(env.get("linux86"));
+					System.load(System.getProperty("user.dir") + "/lib/linux/x86/libjnetpcap.so");
 				}
 				catch (UnsatisfiedLinkError e) {
 					System.out.print(e.getMessage());

@@ -32,7 +32,7 @@ public class Sniffer extends Thread
 	int r = Pcap.findAllDevs(devices, errBuffer); //loading network interface list
 	if (r != Pcap.OK || devices.isEmpty()) //check for device errors
 	{
-		System.err.printf("can't collect devices, error" , errBuffer.toString()); //print errorMesssage
+		System.err.printf("can't collect devices. Error: %s" , errBuffer.toString()); //print errorMesssage
 		return;
 	}
 	
