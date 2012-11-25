@@ -22,8 +22,8 @@ import org.jnetpcap.protocol.tcpip.Tcp;
 public class Program
 {
 	static Boolean close;
-	static Boolean cookies;
-	static Boolean mails;
+	static Boolean cookies = false;
+	static Boolean mails = false;
 	static Tree tree;
 	static TreeItem[] items;
 	static PcapPacket[] packets;
@@ -121,6 +121,7 @@ public class Program
 		trclmnContent.setText("Content");
 		
 		final Button btnCookies = new Button(shell, SWT.CHECK);
+		btnCookies.setSelection(cookies);
 		btnCookies.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -132,6 +133,7 @@ public class Program
 		btnCookies.setText("Cookies");
 		
 		final Button btnMails = new Button(shell, SWT.CHECK);
+		btnMails.setSelection(mails);
 		btnMails.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -144,20 +146,24 @@ public class Program
 		
 		List list = new List(shell, SWT.BORDER);
 		list.setBounds(10, 45, 121, 307);
-		shell.open();
 		
+		shell.open();
+		while (!shell.isDisposed()) {
+            if (!display.readAndDispatch()) display.sleep();
+		}
+		display.dispose ();
 		//Interfaces.collectDevices();
 		
 		
 		//while (!close) {
 		//}
 		
-		Timer timer = new Timer();
+		/*Timer timer = new Timer();
 		TimerTask task = new TimerTask()
 		{
 			public void run()
 			{
-				/*Ethernet ethernet = new Ethernet();
+				Ethernet ethernet = new Ethernet();
 				Tcp tcp = new Tcp();
 				Ip4 ip4 = new Ip4();
 				
@@ -169,11 +175,11 @@ public class Program
 					items[items.length].setData("Destination", packets[i].getHeader(tcp).destination());
 					items[items.length].setData("Type", "");
 					items[items.length].setData("Content", "");
-				}*/
+				}
 			}
 		};
 		
-		timer.scheduleAtFixedRate(task, 0, 1000);
+		timer.scheduleAtFixedRate(task, 0, 1000);*/
 	}	
 	
 	protected static void updateTree()
